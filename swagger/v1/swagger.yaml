@@ -1,0 +1,200 @@
+---
+openapi: 3.0.1
+info:
+  title: Patient Injection API
+  version: v1
+  description: API documentation for recording injections and calculating treatment
+    adherence.
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: API-KEY
+      in: header
+      description: Patient API Key for authentication
+paths:
+  "/patients/{patient_id}/injections":
+    post:
+      summary: Register a new injection
+      tags:
+      - Injections
+      security:
+      - api_key: []
+      parameters:
+      - name: patient_id
+        in: path
+        description: ID of the patient
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Injection created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  patient_id:
+                    type: integer
+                    example: 1
+                  dose:
+                    type: number
+                    example: 10.1
+                  lot_number:
+                    type: string
+                    example: ABC123
+                  drug_name:
+                    type: string
+                    example: Factor VIII
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      dose:
+                        type: array
+                        items:
+                          type: string
+                          example: is missing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dose:
+                  type: number
+                  example: 10.1
+                lot_number:
+                  type: string
+                  example: ABC123
+                drug_name:
+                  type: string
+                  example: Factor VIII
+              required:
+              - dose
+              - lot_number
+              - drug_name
+    get:
+      summary: Retrieve all injections for a patient
+      tags:
+      - Injections
+      security:
+      - api_key: []
+      parameters:
+      - name: patient_id
+        in: path
+        description: ID of the patient
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Injections retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    dose:
+                      type: number
+                      example: 3.0
+                    lot_number:
+                      type: string
+                      example: ABC123
+                    drug_name:
+                      type: string
+                      example: FactorX
+                    created_at:
+                      type: string
+                      format: date_time
+                      example: '2025-07-19T15:27:26.111Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing or invalid API-KEY header
+  "/patients":
+    post:
+      summary: Create a new patient
+      tags:
+      - Patients
+      responses:
+        '201':
+          description: Patient created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  api_key:
+                    type: string
+                    example: randomly_generated_api_key
+                  created_at:
+                    type: string
+                    format: date_time
+                    example: '2023-01-01T00:00:00Z'
+                  updated_at:
+                    type: string
+                    format: date_time
+                    example: '2023-01-01T00:00:00Z'
+  "/patients/{patient_id}/adherence":
+    get:
+      summary: Get adherence score for a patient
+      tags:
+      - Patients
+      security:
+      - api_key: []
+      parameters:
+      - name: patient_id
+        in: path
+        description: ID of the patient
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Adherence score retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  score:
+                    type: number
+                    example: 85.5
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing or invalid API-KEY header
+servers:
+- url: http://localhost:3000
+  description: Local server
