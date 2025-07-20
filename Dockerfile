@@ -35,8 +35,10 @@ RUN chmod 644 my-htpasswd-file
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
+RUN ls -l ./docker/start.sh
+
 # Create a script to run the Prometheus Exporter and Rails server
-COPY docker/start.sh /rails/start.sh
+COPY ./docker/start.sh /rails/start.sh
 RUN chmod +x /rails/start.sh
 
 # Expose ports for Rails server and Prometheus
