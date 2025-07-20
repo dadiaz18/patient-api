@@ -24,7 +24,7 @@ class AdherenceCalculator
     dates = []
     current_date = start_date
 
-    while current_date < end_date
+    while current_date <= end_date
       dates << current_date
       current_date += INJECTION_FREQUENCY
     end

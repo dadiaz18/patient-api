@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe AdherenceCalculator do
   let(:patient_1) { create(:patient, created_at: 10.days.ago) }
   let(:patient_2) { create(:patient, created_at: 5.days.ago) }
+  let(:patient_3) { create(:patient, created_at: 6.days.ago) }
 
   before do
     # patient 1
@@ -28,6 +29,15 @@ RSpec.describe AdherenceCalculator do
       score = calculator.call
 
       expect(score).to eq(50.0)
+    end
+
+    it 'calculates 33.33% adherence when 1 out of 3 expected injections match' do
+      create(:injection, patient: patient_3, created_at: 3.days.ago)
+
+      calculator = AdherenceCalculator.new(patient_3)
+      score = calculator.call
+
+      expect(score).to eq(33.33)
     end
 
     it 'returns 0.0 if no injections are on time' do

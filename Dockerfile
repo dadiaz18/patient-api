@@ -35,12 +35,9 @@ RUN chmod 644 my-htpasswd-file
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Crear un script de inicio para ejecutar tanto Rails como Prometheus Exporter
-RUN echo '#!/bin/bash\n\
-prometheus_exporter --auth /rails/my-htpasswd-file --port $PROMETHEUS_EXPORTER_PORT &\n\
-bin/rails db:prepare\n\
-bin/rails server -b 0.0.0.0\n' > /rails/start.sh && \
-    chmod +x /rails/start.sh
+# Create a script to run the Prometheus Exporter and Rails server
+COPY start.sh /rails/start.sh
+RUN chmod +x /rails/start.sh
 
 # Expose ports for Rails server and Prometheus
 EXPOSE 3000 9394
