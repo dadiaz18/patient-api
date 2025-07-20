@@ -36,7 +36,7 @@ RUN chmod 644 my-htpasswd-file
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Create a script to run the Prometheus Exporter and Rails server
-COPY start.sh /rails/start.sh
+COPY docker/start.sh /rails/start.sh
 RUN chmod +x /rails/start.sh
 
 # Expose ports for Rails server and Prometheus
