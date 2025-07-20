@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Injections API</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71, #3498db, #9b59b6);
+            animation: rainbow 3s ease-in-out infinite;
+        }
+
+        @keyframes rainbow {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #5a6c7d;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h2 i {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #34495e;
+            margin: 2rem 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:nth-child(1) { border-left-color: #e74c3c; }
+        .tech-item:nth-child(2) { border-left-color: #3498db; }
+        .tech-item:nth-child(3) { border-left-color: #2ecc71; }
+        .tech-item:nth-child(4) { border-left-color: #f39c12; }
+        .tech-item:nth-child(5) { border-left-color: #9b59b6; }
+
+        .tech-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71);
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .command {
+            color: #569cd6;
+        }
+
+        .endpoint-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .endpoint {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .endpoint:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .endpoint-method {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .endpoint-url {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .feature-item i {
+            font-size: 1.2rem;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #d35400;
+        }
+
+        .warning-box h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        li::before {
+            content: '▶';
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .medical-info {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .medical-info h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scroll-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1><i class="fas fa-syringe"></i> Patient Injections API</h1>
+            <p>This API helps patients with hemophilia manage their treatments, record injections, and track how well they follow their treatment plan.</p>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-cogs"></i> Technologies Used</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <strong>Ruby:</strong> 3.4.3
+                </div>
+                <div class="tech-item">
+                    <strong>Rails:</strong> 8.0.2
+                </div>
+                <div class="tech-item">
+                    <strong>Database:</strong> SQLite3
+                </div>
+                <div class="tech-item">
+                    <strong>API Documentation:</strong> Swagger (rswag)
+                </div>
+                <div class="tech-item">
+                    <strong>Monitoring:</strong> Prometheus Exporter
+                </div>
+            </div>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-rocket"></i> How to Run the Application</h2>
+            <h3><i class="fab fa-docker"></i> Using Docker</h3>
+            <p>The project is set up to run easily with Docker:</p>
+            <div class="code-block">
+<span class="comment"># Build and start the application</span>
+<span class="command">docker-compose</span> up --build
+
+<span class="comment"># Run in background mode</span>
+<span class="command">docker-compose</span> up -d
+            </div>
+            <p>The application will be available at <code style="background: #f8f9fa; padding: 0.2rem 0.5rem; border-radius: 4px; color: #e74c3c;">http://localhost:3000</code></p>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-search"></i> How to Use the API</h2>
+            <h3><i class="fas fa-book"></i> Swagger Documentation</h3>
+            <p>Complete API documentation is available through Swagger UI:</p>
+            <div class="info-box">
+                <strong>URL:</strong> <code>http://localhost:3000/api-docs</code>
+                <br><br>
+                From there you can explore and test all available endpoints.
+            </div>
+
+            <h3><i class="fas fa-plug"></i> Main Endpoints:</h3>
+            <div class="endpoint-grid">
+                <div class="endpoint">
+                    <div class="endpoint-method">POST</div>
+                    <div class="endpoint-url">/patients</div>
+                    <p>Returns an <code>id</code> and <code>api_key</code> that will be used to authenticate other operations</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-method">POST</div>
+                    <div class="endpoint-url">/patients/:patient_id/injections</div>
+                    <p>Requires authentication with the patient's <code>api_key</code></p>
+                    <p>Parameters: dose, batch number, medication</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-method">GET</div>
+                    <div class="endpoint-url">/patients/:patient_id/injections</div>
+                    <p>Requires authentication with the patient's <code>api_key</code></p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-method">GET</div>
+                    <div class="endpoint-url">/patients/:patient_id/adherence_score</div>
+                    <p>Requires authentication with the patient's <code>api_key</code></p>
+                    <p>Returns a percentage showing how well the patient follows their treatment</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-vial"></i> Running Tests</h2>
+            <div class="code-block">
+<span class="comment"># Inside Docker container</span>
+<span class="command">docker-compose</span> exec web bundle exec rspec
+
+<span class="comment"># Or directly if you have Ruby installed locally</span>
+<span class="command">bundle</span> exec rspec
+            </div>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-chart-line"></i> Monitoring with Prometheus</h2>
+            <p>The project provides metrics for Prometheus on port 9394. This endpoint is protected by basic authentication using the <code>my-htpasswd-file</code>.</p>
+            <div class="info-box">
+                <strong>URL:</strong> <code>http://localhost:9394/metrics</code>
+                <br><br>
+                To access it, you need to provide the credentials set up in the htpasswd file.
+            </div>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-key"></i> Metrics Authentication Notice</h2>
+            <div class="warning-box">
+                <h3><i class="fas fa-exclamation-triangle"></i> For the purposes of this challenge</h3>
+                <p>The Prometheus metrics endpoint is protected with <strong>basic authentication</strong> using the credentials:</p>
+                <ul style="margin: 1rem 0;">
+                    <li><strong>Username:</strong> <code>admin</code></li>
+                    <li><strong>Password:</strong> <code>diego</code></li>
+                </ul>
+            </div>
+            <p>This was intentionally added to simulate a scenario where access to monitoring endpoints is restricted. The password file (<code>my-htpasswd-file</code>) is included <strong>only as part of this test project</strong> and does <strong>not</strong> expose any sensitive or production data.</p>
+            <p>Please note that committing authentication files to public repositories is <strong>not a recommended practice</strong> in real-world applications. For this challenge, it was included solely for demonstration purposes and to show awareness of access control mechanisms in monitoring.</p>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-check-circle"></i> Implemented Features</h2>
+            <h3><i class="fas fa-list-check"></i> Minimum Requirements:</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Patient creation with secure <code>id</code> and <code>api_key</code></span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Injection recording with all required fields</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Query injections for a specific patient</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Calculate treatment adherence score</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Security using <code>api_key</code> to protect endpoints</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Unit and integration tests</span>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-star"></i> Bonus Features:</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span><strong>API Documentation:</strong> Implemented with Swagger UI using rswag</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span><strong>Prometheus Metrics:</strong> System and application metrics with authentication</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span><strong>CI/CD:</strong> GitHub Actions for automatic test and linter execution</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span><strong>Advanced Validations:</strong> Using dry-validation for complex business rules</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-folder-tree"></i> Project Structure</h2>
+            <p>The project follows standard Rails structure with some additions:</p>
+            <ul>
+                <li><code>app</code>: Main application code</li>
+                <li><code>spec</code>: Automated tests</li>
+                <li><code>swagger</code>: API documentation</li>
+                <li><code>Dockerfile</code> and <code>docker-compose.yml</code>: Docker configuration</li>
+            </ul>
+        </div>
+
+        <div class="section scroll-fade">
+            <h2><i class="fas fa-shield-alt"></i> Security</h2>
+            <ul>
+                <li>Injection and adherence score endpoints are protected by the patient's <code>api_key</code></li>
+                <li>Prometheus metrics endpoint is protected by basic authentication</li>
+                <li>Input validation is implemented for all parameters</li>
+            </ul>
+        </div>
+
+        <div class="medical-info scroll-fade">
+            <h2><i class="fas fa-heartbeat"></i> About Hemophilia Treatment</h2>
+            <p>This API helps patients track their factor replacement therapy, which is essential for managing hemophilia and preventing bleeding episodes.</p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-fade').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add some interactive code highlighting
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent.trim());
+                
+                const originalBg = block.style.background;
+                block.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                block.style.transition = 'background 0.3s ease';
+                
+                setTimeout(() => {
+                    block.style.background = originalBg;
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

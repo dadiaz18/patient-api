@@ -74,6 +74,21 @@ The project provides metrics for Prometheus on port 9394. This endpoint is prote
 
 To access it, you need to provide the credentials set up in the htpasswd file.
 
+Claro, aquí tienes un apartado en inglés que podés agregar a tu README bajo la sección de **🔒 Security** o crear una nueva sección llamada **🧪 Metrics Authentication Notice**, como prefieras:
+
+
+## 🧪 Metrics Authentication Notice
+
+> ⚠️ For the purposes of this challenge, the Prometheus metrics endpoint is protected with **basic authentication** using the credentials:
+>
+> * **Username:** `admin`
+> * **Password:** `diego`
+
+This was intentionally added to simulate a scenario where access to monitoring endpoints is restricted. The password file (`my-htpasswd-file`) is included **only as part of this test project** and does **not** expose any sensitive or production data.
+
+Please note that committing authentication files to public repositories is **not a recommended practice** in real-world applications. For this challenge, it was included solely for demonstration purposes and to show awareness of access control mechanisms in monitoring.
+
+
 ## ✅ Implemented Features
 
 ### Minimum Requirements:
