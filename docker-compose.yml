@@ -7,6 +7,9 @@ services:
       - "9394:9394"
     volumes:
       - ./storage:/rails/storage
+      - ./log:/rails/log
+      - ./tmp:/rails/tmp
     environment:
       - RAILS_ENV=development
       - PROMETHEUS_EXPORTER_PORT=9394
+      - RAILS_LOG_TO_STDOUT=true
