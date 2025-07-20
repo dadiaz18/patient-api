@@ -39,7 +39,8 @@ RUN ls -l ./docker/start.sh
 
 # Create a script to run the Prometheus Exporter and Rails server
 COPY ./docker/start.sh /rails/start.sh
-RUN chmod +x /rails/start.sh
+RUN chmod +x /rails/start.sh && \
+    sed -i 's/\r$//' /rails/start.sh
 
 # Expose ports for Rails server and Prometheus
 EXPOSE 3000 9394
