@@ -206,7 +206,7 @@ GEM
     prism (1.4.0)
     prometheus-client (4.2.5)
       base64
-    prometheus_exporter (2.2.0)
+    prometheus_exporter (2.3.0)
       webrick
     psych (5.2.6)
       date
