@@ -43,5 +43,5 @@ group :development, :test do
   gem "shoulda-matchers"
 
   # Create tests and generate real-time API docs from your specs
-  gem "rswag-specs", "~> 2.16.0"
+  gem "rswag-specs", "~> 2.17.0"
 end
